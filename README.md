@@ -1,4 +1,4 @@
-# NeighborNet
+# NexCos
 
 A community-focused platform for sharing resources, organizing events, and connecting with neighbors.
 
