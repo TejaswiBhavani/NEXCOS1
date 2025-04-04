@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Bell, AlertTriangle, Users, Search } from 'lucide-react';
 import Header from './components/Header';
@@ -8,9 +8,11 @@ import AlertsList from './components/alerts/AlertsList';
 import { useResourceStore } from './store/resourceStore';
 import { useAlertStore } from './store/alertStore';
 import { useAuthStore } from './store/authStore';
+import { useThemeStore } from './store/themeStore';
 import { ResourceType } from './types';
 import CommunityChat from './components/CommunityChat';
 import Profile from './components/Profile';
+import NexAI from './components/NexAI';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +20,7 @@ function App() {
   const resources = useResourceStore((state) => state.resources);
   const alerts = useAlertStore((state) => state.alerts);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
 
   const filteredResources = resources.filter(resource => {
     const matchesSearch = 
@@ -30,9 +33,17 @@ function App() {
     return matchesSearch && matchesType;
   });
 
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
         <Header />
         
         <Routes>
@@ -40,20 +51,20 @@ function App() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
               {/* Hero Section */}
               <div className="text-center mb-12">
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Stay Connected, Stay Prepared
                 </h1>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                <p className={`text-xl max-w-2xl mx-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   Join your local community in sharing resources, preparing for emergencies, and building resilience together.
                 </p>
               </div>
 
               {/* Alert Banner */}
               {alerts.length > 0 && (
-                <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-8">
+                <div className={`border-l-4 border-amber-500 p-4 mb-8 ${isDarkMode ? 'bg-amber-900/50' : 'bg-amber-50'}`}>
                   <div className="flex items-center">
                     <AlertTriangle className="h-6 w-6 text-amber-500 mr-3" />
-                    <p className="text-amber-700">
+                    <p className={isDarkMode ? 'text-amber-200' : 'text-amber-700'}>
                       {alerts[0].type === 'prep' ? 'Preparation Alert' : 'Help Needed'}: {alerts[0].title}
                     </p>
                   </div>
@@ -69,7 +80,11 @@ function App() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search resources, alerts, or locations..."
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+                      isDarkMode 
+                        ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-200 text-gray-900'
+                    }`}
                   />
                 </div>
                 <div className="flex gap-2">
@@ -103,7 +118,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
         </Routes>
 
-        <footer className="bg-gray-800 text-gray-300 mt-16 py-8">
+        <footer className={`mt-16 py-8 ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-800 text-gray-300'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
@@ -131,6 +146,8 @@ function App() {
             </div>
           </div>
         </footer>
+
+        <NexAI />
       </div>
     </Router>
   );

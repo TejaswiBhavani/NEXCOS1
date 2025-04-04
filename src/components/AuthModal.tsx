@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { X, User, Mail, Building, Lock, Loader2 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { auth } from '../config/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  updateProfile 
+} from 'firebase/auth';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -36,7 +40,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
         );
 
         await updateProfile(user, {
-          displayName: formData.name,
+          displayName: formData.name
         });
 
         login({
