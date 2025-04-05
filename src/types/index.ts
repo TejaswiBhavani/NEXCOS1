@@ -10,6 +10,24 @@ export interface User {
   updatedAt: string;
 }
 
+// Resource Types
+export type ResourceType = 
+  | 'Tools'
+  | 'Emergency'
+  | 'Food'
+  | 'Water'
+  | 'Space'
+  | 'Medical'
+  | 'Traffic'
+  | 'Power'
+  | 'Communication'
+  | 'Navigation'
+  | 'Lighting'
+  | 'Community'
+  | 'Support'
+  | 'Skills'
+  | 'Networks';
+
 // Parking Types
 export interface ParkingSpace {
   id: string;
