@@ -3,15 +3,21 @@ import { Link, useLocation } from 'react-router-dom';
 import { Shield, Bell, Menu, X, User, LogOut, Moon, Sun } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
+import { useNotificationStore } from '../store/notificationStore';
 import AuthModal from './AuthModal';
+import NotificationPanel from './NotificationPanel';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const { user, isAuthenticated, logout } = useAuthStore();
   const { isDarkMode, toggleDarkMode } = useThemeStore();
+  const notifications = useNotificationStore((state) => state.notifications);
   const location = useLocation();
+
+  const unreadNotifications = notifications.filter((n) => !n.read).length;
 
   const handleAuth = (mode: 'login' | 'signup') => {
     setAuthMode(mode);
@@ -71,15 +77,19 @@ export default function Header() {
 
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
-                  <Link
-                    to="/notifications"
+                  <button
+                    onClick={() => setShowNotifications(true)}
                     className={`p-2 transition-colors relative ${
                       isDarkMode ? 'text-gray-300 hover:text-primary-400' : 'text-gray-600 hover:text-primary-600'
                     }`}
                   >
                     <Bell className="h-5 w-5" />
-                    <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-accent-500 ring-2 ring-white" />
-                  </Link>
+                    {unreadNotifications > 0 && (
+                      <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full">
+                        {unreadNotifications}
+                      </span>
+                    )}
+                  </button>
                   <div className="relative group">
                     <button className={`flex items-center space-x-2 p-2 rounded-lg ${
                       isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
@@ -206,6 +216,11 @@ export default function Header() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         mode={authMode}
+      />
+
+      <NotificationPanel
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
       />
     </>
   );
