@@ -10,8 +10,8 @@ const firebaseConfig = {
   projectId: "nexcos-8513d",
   storageBucket: "nexcos-8513d.firebasestorage.app",
   messagingSenderId: "209476458424",
-  appId: "1:209476458424:web:7c64f19bd9b806c385e14d",
-  measurementId: "G-CC236GEV18"
+  appId: "1:209476458424:web:85a87ee90b914da385e14d",
+  measurementId: "G-Q8DWZNWHXP"
 };
 
 // Initialize Firebase

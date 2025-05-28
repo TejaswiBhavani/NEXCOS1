@@ -13,6 +13,8 @@ import { ResourceType } from './types';
 import CommunityChat from './components/CommunityChat';
 import Profile from './components/Profile';
 import NexAI from './components/NexAI';
+import CommunityFeed from './components/CommunityFeed';
+import CreatePostForm from './components/CreatePostForm'; // Add this import
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -116,6 +118,9 @@ function App() {
           
           <Route path="/chat" element={<CommunityChat />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/feed" element={<CommunityFeed />} />
+          <Route path="/create-post" element={<CreatePostForm />} />
+          <Route path="/edit-post/:postId" element={<CreatePostForm />} />
         </Routes>
 
         <footer className={`mt-16 py-8 ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-800 text-gray-300'}`}>

@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 // User Types
 export interface User {
   id: string;
@@ -198,4 +200,38 @@ export interface AccessPassFormData {
   validUntil: string;
   purpose: string;
   accessAreas: string[];
+}
+
+// User Profile Data in Firestore
+export interface UserProfileData {
+  uid: string;
+  email: string; // Copied from Auth
+  name: string;  // Synced with Firebase Auth displayName
+  profilePictureUrl?: string;
+  location: {
+    pincode: string;
+    city?: string;
+    coordinates?: {
+      latitude: number;
+      longitude: number;
+    };
+    manualEntry: boolean; // True if pincode/city was typed, false if from geolocation
+  };
+  communityTags: string[]; // e.g., ["hostel", "neighborhood"]
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Community Feed Post Type
+export interface Post {
+  id: string; // Document ID
+  title: string;
+  content: string;
+  type: "Need Help" | "Offering Help" | "Update"; // Enum-like type
+  authorUid: string;
+  authorName: string; // Denormalized for easier display
+  pincode: string; // The group (pincode) this post belongs to
+  createdAt: Timestamp;
+  updatedAt?: Timestamp; // Optional on creation, set on edit
+  imageUrl?: string; // Optional for image uploads
 }

@@ -19,12 +19,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     name: '',
     email: '',
     password: '',
-    building: '',
+    // building field removed
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const login = useAuthStore((state) => state.login);
+  // login call from useAuthStore removed, onAuthStateChanged handles this
+  // const login = useAuthStore((state) => state.login);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,34 +44,18 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           displayName: formData.name
         });
 
-        login({
-          id: user.uid,
-          name: formData.name,
-          email: formData.email,
-          location: formData.building,
-          verified: false,
-          vouches: 0,
-          createdAt: Date.now(),
-        });
+        // login() call removed, onAuthStateChanged in authStore handles state updates
       } else {
-        const { user } = await signInWithEmailAndPassword(
+        // For login, we just need to sign in. onAuthStateChanged will update the store.
+        await signInWithEmailAndPassword(
           auth,
           formData.email,
           formData.password
         );
-
-        login({
-          id: user.uid,
-          name: user.displayName || 'User',
-          email: user.email!,
-          location: '',
-          verified: false,
-          vouches: 0,
-          createdAt: Date.now(),
-        });
+        // login() call removed
       }
 
-      onClose();
+      onClose(); // Close modal on successful signup/login
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -146,21 +131,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             </div>
           </div>
 
-          {mode === 'signup' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Building</label>
-              <div className="mt-1 relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  value={formData.building}
-                  onChange={(e) => setFormData({ ...formData, building: e.target.value })}
-                  className="pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  required
-                />
-              </div>
-            </div>
-          )}
+          {/* Building input field removed */}
 
           <div className="flex justify-end space-x-3 pt-4">
             <button
